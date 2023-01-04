@@ -128,21 +128,54 @@ char buffer[MAX_PACKAGE_SIZE];
 BOOL AccessPage(HINTERNET internet, LPCWSTR url, char* buffer, DWORD bufferLen, DWORD* oBuffer) {
 	HINTERNET hurl = InternetOpenUrl(internet, url, NULL, -1, INTERNET_FLAG_NO_UI, NULL);
 
+	DWORD readed_bytes = 0;
+
 	if (hurl) {
-		if (InternetReadFile(hurl, buffer, bufferLen, oBuffer)) {
-			InternetCloseHandle(hurl);
-			return true;
+		while (true) {
+			DWORD reading_bytes = 0;
+			if (InternetReadFile(hurl, buffer + readed_bytes, bufferLen - readed_bytes, &reading_bytes)) {
+				if (reading_bytes == 0) {
+					*oBuffer = readed_bytes;
+					InternetCloseHandle(hurl);
+					return true;
+				}
+				else {
+					readed_bytes += reading_bytes;
+				}
+			}
+			else {
+				break;
+			}
+
 		}
 		InternetCloseHandle(hurl);
 	}
 	return false;
 }
 
-BOOL GetBiliToken(HINTERNET internet, int room_id, std::string& token, std::string& host, int& port, int host_hint = 0) {
+BOOL GetBiliToken(HINTERNET internet, int room_id, std::string& token, std::string& host, int& port, int& real_room_id, int host_hint = 0) {
 	WCHAR url[4096];
-	swprintf_s(url, 4096, L"https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=%d", room_id);
 
+	swprintf_s(url, 4096, L"https://api.live.bilibili.com/room/v1/Room/get_info?room_id=%d", room_id);
 	DWORD len;
+
+	if (!AccessPage(internet, url, buffer, sizeof(buffer), &len))
+		return FALSE;
+
+	Json::Value pre_v;
+	if (!Json::Reader().parse(buffer, buffer + len, pre_v))
+		return FALSE;
+
+	if (!pre_v.isObject())return FALSE;
+	Json::Value& pre_data = pre_v["data"];
+	if (!pre_data.isObject())return FALSE;
+	Json::Value& pre_room_id = pre_data["room_id"];
+	if (!pre_room_id.isInt())return FALSE;
+
+	real_room_id = pre_room_id.asInt();
+
+	swprintf_s(url, 4096, L"https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=%d", real_room_id);
+
 	if (!AccessPage(internet, url, buffer, sizeof(buffer), &len))
 		return FALSE;
 
@@ -316,8 +349,12 @@ DWORD WINAPI DanmuReceiveThread(LPVOID lpParam) {
 			}
 			myRoomId = roomId;
 
-			if (!GetBiliToken(internet, myRoomId, token, host, port)) {
+			int real_room_id = myRoomId;
+
+			if (!GetBiliToken(internet, myRoomId, token, host, port, real_room_id)) {
 				// 获取tcp链接地址失败
+				myRoomId = 0;
+				// 等一会再试
 				Sleep(2000);
 				continue;
 			}
@@ -335,7 +372,7 @@ DWORD WINAPI DanmuReceiveThread(LPVOID lpParam) {
 			connect(sock, (SOCKADDR*)&danmuServer, sizeof(danmuServer));
 			received_package = 0;
 
-			if (!SendAuthPackage(sock, myRoomId, token)) {
+			if (!SendAuthPackage(sock, real_room_id, token)) {
 				//bilibili服务器授权失败
 				closesocket(sock);
 				sock = NULL;

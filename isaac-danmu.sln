@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "isaac-danmuB", "isaac-danmuB\isaac-danmuB.vcxproj", "{1451B837-D5D1-4525-9160-288B267512F6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bili-danmu-test", "bili-danmu-test\bili-danmu-test.vcxproj", "{E4254C1D-3BF1-44AB-83FE-3602357CB996}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{1451B837-D5D1-4525-9160-288B267512F6}.Release|x64.Build.0 = Release|x64
 		{1451B837-D5D1-4525-9160-288B267512F6}.Release|x86.ActiveCfg = Release|Win32
 		{1451B837-D5D1-4525-9160-288B267512F6}.Release|x86.Build.0 = Release|Win32
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Debug|x64.ActiveCfg = Debug|x64
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Debug|x64.Build.0 = Debug|x64
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Debug|x86.ActiveCfg = Debug|Win32
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Debug|x86.Build.0 = Debug|Win32
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Release|x64.ActiveCfg = Release|x64
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Release|x64.Build.0 = Release|x64
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Release|x86.ActiveCfg = Release|Win32
+		{E4254C1D-3BF1-44AB-83FE-3602357CB996}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

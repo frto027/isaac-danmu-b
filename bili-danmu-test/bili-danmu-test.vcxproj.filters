@@ -15,42 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ilua.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="danmu.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="bili-danmu-test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="..\isaac-danmuB\jsoncpp\jsoncpp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ilua.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="danmu_bili.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="jsoncpp\jsoncpp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="lib\Lua5.3.3r.def">
-      <Filter>源文件</Filter>
-    </None>
   </ItemGroup>
 </Project>

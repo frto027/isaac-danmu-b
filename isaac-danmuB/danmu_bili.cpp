@@ -341,44 +341,49 @@ DWORD WINAPI DanmuReceiveThread(LPVOID lpParam) {
 			break;
 		}
 
-		if (myRoomId != roomId && roomId > 0) {
+		if (myRoomId != roomId) {
 			//switch room id
 			if (sock) {
 				closesocket(sock);
 				sock = NULL;
 			}
-			myRoomId = roomId;
 
-			int real_room_id = myRoomId;
+			if (roomId > 0) {
+				myRoomId = roomId;
 
-			if (!GetBiliToken(internet, myRoomId, token, host, port, real_room_id)) {
-				// 获取tcp链接地址失败
-				myRoomId = 0;
-				// 等一会再试
-				Sleep(2000);
-				continue;
+				int real_room_id = myRoomId;
+
+				if (!GetBiliToken(internet, myRoomId, token, host, port, real_room_id)) {
+					// 获取tcp链接地址失败
+					myRoomId = 0;
+					// 等一会再试
+					Sleep(2000);
+					continue;
+				}
+
+				last_heartbeat_send_time = time(NULL) - 1000;
+
+				struct sockaddr_in danmuServer;
+				danmuServer.sin_family = AF_INET;
+				danmuServer.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr*)*(gethostbyname(host.c_str()))->h_addr_list));
+				danmuServer.sin_port = htons(port);
+
+				sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+				DWORD timeout = 5 * 1000;
+				setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+				connect(sock, (SOCKADDR*)&danmuServer, sizeof(danmuServer));
+				received_package = 0;
+
+				if (!SendAuthPackage(sock, real_room_id, token)) {
+					//bilibili服务器授权失败
+					closesocket(sock);
+					sock = NULL;
+					myRoomId = 0;
+					Sleep(2000);
+				}
 			}
-
-			last_heartbeat_send_time = time(NULL) - 1000;
-
-			struct sockaddr_in danmuServer;
-			danmuServer.sin_family = AF_INET;
-			danmuServer.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr*)*(gethostbyname(host.c_str()))->h_addr_list));
-			danmuServer.sin_port = htons(port);
-
-			sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-			DWORD timeout = 5 * 1000;
-			setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
-			connect(sock, (SOCKADDR*)&danmuServer, sizeof(danmuServer));
-			received_package = 0;
-
-			if (!SendAuthPackage(sock, real_room_id, token)) {
-				//bilibili服务器授权失败
-				closesocket(sock);
-				sock = NULL;
-				myRoomId = 0;
-				Sleep(2000);
-				continue;
+			else {
+				myRoomId = roomId;
 			}
 			continue;
 		}
@@ -497,8 +502,16 @@ DWORD WINAPI DanmuReceiveThread(LPVOID lpParam) {
 				}
 			}
 		}
+		else {
+			//待机状态不要做任何事情
+			Sleep(300);
+		}
 	}
 	//clean up
+
+	if (sock) {
+		closesocket(sock);
+	}
 
 	return 0;
 }

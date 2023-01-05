@@ -20,7 +20,7 @@ HINTERNET internet;
 
 volatile int roomId = -1;
 volatile BOOL isExit = 0;
-volatile BOOL isReading = 1;
+volatile BOOL isReading = 0;
 
 volatile unsigned int popularity = 0;
 

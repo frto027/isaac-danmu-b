@@ -31,6 +31,19 @@ int set_room_id(lua_State* L) {
     }
     return 0;
 }
+
+int set_reading_enabled(lua_State* L) {
+    if (lua_isboolean(L, 1)) {
+        danmu_set_reading_enabled(lua_toboolean(L, 1));
+    }
+    return 0;
+}
+
+int get_reading_enabled(lua_State* L) {
+    lua_pushboolean(L, danmu_get_reading_enabled());
+    return 1;
+}
+
 int get_popularity(lua_State* L) {
     lua_pushinteger(L, danmu_get_popularity());
     return 1;
@@ -43,6 +56,8 @@ struct {
     {"receive",receive},
     {"setRoom",set_room_id},
     {"getPopularity",get_popularity},
+    {"getReadingEnabled",get_reading_enabled},
+    {"setReadingEnabled",set_reading_enabled},
     {NULL, NULL}
 };
 
@@ -78,7 +93,7 @@ int open(lua_State * L) {
 
     c_module_reference_count++;
     lua_setglobal(L, "danmuB");
-    Isaac::ConsoleOutput("danmuB service started.\n");
+    Isaac::ConsoleOutput("danmuB service made by @frto027 started.\n");
 
     //do some init works
     danmu_init();

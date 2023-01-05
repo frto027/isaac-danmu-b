@@ -32,33 +32,50 @@ danmuB.setRoom(1234)
 该mod新增全局变量`danmuB`为其接口。
 
 ```
+danmuB.setReadingEnabled(enabled)
+enabled是布尔值
+danmuB.getReadingEnabled()
+返回值是布尔值
+```
+
+设置reading是否启用。默认是关闭的，需要手动启用。
+不论reading是否启用，danmuB服务都会连接B站服务器并拉取弹幕。但只有在reading启用后，才会将弹幕储存到缓冲队列中，留给后续的`danmuB.receive`使用。
+
+
+也就是说您需要调用`danmuB.setReadingEnabled(true)`才能接收到弹幕数据。启用后所有接收到的弹幕都会存储在缓冲队列中，每次调用`danmuB.receive`都会清空队列。如果长时间不调用`receive`函数则队列会满（当前队列长度为10000条弹幕），后续收到的弹幕会被漏掉。
+```
 danmuB.receive(handler)
 
-该函数内部反复调用handler处理每一条缓存的、未处理的弹幕数据。handler签名：
+handler签名：
 
 function handler(text)
 	...
 end
 
-text是服务器返回的json字符串
 ```
+该函数内部反复多次调用`handler`处理每一条缓存的、未处理的弹幕数据。
+
+`text`是服务器返回的json字符串
 
 ```
 danmuB.setRoom(roomid)
-设置房间号（数值改变则会重新发起连接）
-roomid是整数值
 ```
+
+设置房间号（数值改变则会重新发起连接）
+`roomid`是整数值
 
 ```
 danmuB.getPopularity()
-返回房间人气值
-返回值是整数值
 ```
+返回房间人气值
+
+返回值是整数值
 
 ```
 danmuB.version
-表示当前（DLL文件的）版本号，浮点数小数
 ```
+
+表示当前（DLL文件的）版本号，浮点数小数
 
 # 发布说明
 

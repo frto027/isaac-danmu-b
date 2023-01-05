@@ -6,6 +6,10 @@ local color = KColor(1,0,0,0.5)
 
 local json = require("json")
 
+if danmuB then
+	danmuB.setReadingEnabled(true)
+end
+
 MyMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	if danmuB then
 

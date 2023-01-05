@@ -55,6 +55,11 @@ danmuB.getPopularity()
 返回值是整数值
 ```
 
+```
+danmuB.version
+表示当前（DLL文件的）版本号，浮点数小数
+```
+
 # 发布说明
 
 由于创意工坊不允许包含`dll`文件的mod，此mod无法上传至创意工坊。此外，需要以`--luadebug`参数启动游戏，使用时应知晓其安全风险。

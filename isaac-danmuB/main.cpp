@@ -2,6 +2,8 @@
 #include "ilua.h"
 #include "danmu.h"
 
+#define VERSION 0.1
+
 int c_module_reference_count = 0;
 
 extern "C" {
@@ -69,6 +71,10 @@ int open(lua_State * L) {
         lua_settable(L, -3);
     }
 #pragma warning(pop)
+
+    lua_pushstring(L, "version");
+    lua_pushnumber(L, VERSION);
+    lua_settable(L, -3);
 
     c_module_reference_count++;
     lua_setglobal(L, "danmuB");

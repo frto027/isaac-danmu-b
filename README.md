@@ -11,7 +11,7 @@ vcpkg install zlib:x86-windows-static
 vcpkg install brotli:x86-windows-static
 ```
 
-使用vs2022的c++开发环境，打开解决方案，编译生成的dll放在本项目的danmuB/lib下面，danmuB就是提供api的mod。
+使用vs2022的c++开发环境，打开解决方案，编译生成的dll放在本项目的danmuB/lib下面（需要将后缀由dll改为bin），danmuB就是提供api的mod。
 
 将本项目的danmuB和example两个mod放在游戏mod文件夹，并使用--luadebug启动游戏即可。
 
@@ -77,9 +77,19 @@ danmuB.version
 
 表示当前（DLL文件的）版本号，浮点数小数
 
+# 其它提示
+
+本mod排它使用。`danmuB.receive`每次调用清空队列，无法被两个mod同时调用。您可以把全局变量danmuB拦截，以拒绝其它mod使用此mod。例如：
+
+```lua
+local my_danmuB = danmuB
+danmuB = nil
+-- 此后的mod无法访问danmuB接口
+```
+
 # 发布说明
 
-由于创意工坊不允许包含`dll`文件的mod，此mod无法上传至创意工坊。此外，需要以`--luadebug`参数启动游戏，使用时应知晓其安全风险。
+需要以`--luadebug`参数启动游戏，您在使用时应知晓其安全风险。
 
 # 性能/功能
 

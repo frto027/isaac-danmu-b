@@ -101,7 +101,7 @@
       </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(OutDir)*$(TargetExt) "E:\SteamLibrary\steamapps\common\The Binding of Isaac Rebirth\mods\danmuB\lib\"</Command>
+      <Command>copy /Y $(OutDir)$(TargetName)$(TargetExt) "E:\SteamLibrary\steamapps\common\The Binding of Isaac Rebirth\mods\danmuB\lib\$(TargetName).bin"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>将生成的dll打补丁至游戏mod中</Message>

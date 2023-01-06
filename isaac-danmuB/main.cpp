@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ilua.h"
 #include "danmu.h"
+#include <stdio.h>
+
 
 #define VERSION 0.1
 
@@ -93,7 +95,11 @@ int open(lua_State * L) {
 
     c_module_reference_count++;
     lua_setglobal(L, "danmuB");
-    Isaac::ConsoleOutput("danmuB service made by @frto027 started.\n");
+
+    char buff[1024];
+    sprintf_s(buff, sizeof(buff), "danmuB v%.1f service made by @frto027 started.\n", VERSION);
+
+    Isaac::ConsoleOutput(buff);
 
     //do some init works
     danmu_init();
